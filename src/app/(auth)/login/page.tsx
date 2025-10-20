@@ -1,6 +1,21 @@
+"use client";
 import { FaLeftLong } from "react-icons/fa6";
 import Link from "next/link";
+
 const LoginPage = () => {
+  const handleLogin = (e: any) => {
+    e.preventDefault();
+    fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: e.currentTarget.email.value,
+        password: e.currentTarget.password.value,
+      }),
+    });
+  };
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border ">
       <div className="border-white relative">
@@ -16,7 +31,11 @@ const LoginPage = () => {
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form action="#" method="POST" className="space-y-6">
+        <form
+          method="POST"
+          className="space-y-6"
+          onSubmit={(e) => handleLogin(e)}
+        >
           <div>
             <label
               htmlFor="email"
