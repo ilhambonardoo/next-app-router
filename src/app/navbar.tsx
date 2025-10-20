@@ -38,6 +38,15 @@ const Navbar = () => {
                 Profile
               </li>
             </Link>
+            <Link href={"/product"}>
+              <li
+                className={`mr-3 ${
+                  pathname === "/product" ? "text-gray-950" : "text-white"
+                } font-semibold cursor-pointer`}
+              >
+                Product
+              </li>
+            </Link>
           </ul>
         </div>
         <div>
