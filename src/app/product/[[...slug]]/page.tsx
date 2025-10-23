@@ -7,7 +7,9 @@ type ProductPage = {
 async function getData() {
   // const res = await fetch("https://fakestoreapi.com/products");
   const res = await fetch("http://localhost:3000/api/product", {
-    cache: "no-store",
+    cache: "force-cache",
+    next: { tags: ["products"] },
+    // next: { revalidate: 10 },
   });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
