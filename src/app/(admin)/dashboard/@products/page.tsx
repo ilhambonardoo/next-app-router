@@ -22,14 +22,16 @@ export default function AdminProductPage() {
   };
   return (
     <>
-      <h1>{status}</h1>
-      <div
-        className="bg-black text-zinc-50 p-3 m-5 w-fit  cursor-pointer rounded-2xl"
-        onClick={() => {
-          revalidate();
-        }}
-      >
-        Revalidate
+      <div className="w-3/6 bg-stone-500 h-96 rounded-2xl flex justify-center items-center">
+        <h1>{status}</h1>
+        <div
+          className="bg-black text-zinc-50 p-3 m-5 w-fit  cursor-pointer rounded-2xl"
+          onClick={() => {
+            revalidate();
+          }}
+        >
+          Revalidate
+        </div>
       </div>
     </>
   );
