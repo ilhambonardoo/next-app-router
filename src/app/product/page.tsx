@@ -37,7 +37,7 @@ export default async function DetailProductPage({ params }: ProductPage) {
               />
               <div className="px-5 pb-5">
                 <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white truncate">
-                  {product.title}
+                  {product.productName}
                 </h5>
                 <div className="flex items-center justify-between mt-3">
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">
