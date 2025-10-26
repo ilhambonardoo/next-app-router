@@ -1,9 +1,66 @@
+"use client";
+
 import Link from "next/link";
 import { FaLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const RegisterPage = () => {
+  const { push } = useRouter();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const handleOnSubmit = async (e: any) => {
+    e.preventDefault();
+    setError("");
+
+    const password = e.target.password.value;
+    const confirmPassword = e.target["confirm-password"].value;
+
+    if (confirmPassword !== password) {
+      setError("Passwords do not match!");
+      setIsLoading(true);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullname: e.target.name.value,
+          email: e.target.email.value,
+          password,
+          confirmPassword,
+        }),
+      });
+
+      if (res.status === 200) {
+        e.target.reset();
+        push("/login");
+      } else {
+        const data = await res.json().catch(() => null);
+        setError((data && data.message) || "Email already exists!");
+        console.log(res, data);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An unexpected error occurred.");
+    } finally {
+      setIsLoading(true);
+    }
+  };
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div>
+        {error ? (
+          <p className="text-center text-red-500 font-semibold text-2xl">
+            {error}
+          </p>
+        ) : (
+          ""
+        )}
+      </div>
       <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="border-white relative">
           <Link href={"/login"}>
@@ -17,7 +74,13 @@ const RegisterPage = () => {
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form action="#" method="POST" className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            handleOnSubmit(e);
+          }}
+          method="POST"
+          className="space-y-6"
+        >
           <div>
             <label
               htmlFor="name"

@@ -1,20 +1,38 @@
 "use client";
 import { FaLeftLong } from "react-icons/fa6";
 import Link from "next/link";
-
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 const LoginPage = () => {
-  const handleLogin = (e: any) => {
+  const { push } = useRouter();
+  const handleLogin = async (e: any) => {
     e.preventDefault();
-    fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: e.currentTarget.email.value,
-        password: e.currentTarget.password.value,
-      }),
-    });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: e.target.email.value,
+        password: e.target.password.value,
+        callbackUrl: "/dashboard",
+      });
+      if (!res?.error) {
+        push("/dashboard");
+      } else {
+        console.log(res.error);
+      }
+    } catch (error) {
+      console.log("Login failed:", error);
+    }
+
+    // fetch("/api/auth/login", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     email: e.currentTarget.email.value,
+    //     password: e.currentTarget.password.value,
+    //   }),
+    // });
   };
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border ">
