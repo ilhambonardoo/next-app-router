@@ -29,6 +29,7 @@ export async function register(data: {
   fullname: string;
   email: string;
   password: string;
+  confirmPassword: string;
   role?: string;
 }) {
   const q = query(
@@ -51,11 +52,31 @@ export async function register(data: {
   } else {
     data.role = "admin";
     data.password = await bcrypt.hash(data.password, 10);
+    data.confirmPassword = await bcrypt.hash(data.confirmPassword, 10);
     try {
       await addDoc(collection(fireStore, "users"), data);
       return { status: true, statusCode: 200, message: "Register successful" };
     } catch (error) {
       return { status: false, statusCode: 400, message: "Register failed" };
     }
+  }
+}
+
+export async function login(data: { email: string }) {
+  const q = query(
+    collection(fireStore, "users"),
+    where("email", "==", data.email)
+  );
+
+  const snapshot = await getDocs(q);
+  const user = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  if (user) {
+    return user[0];
+  } else {
+    return null;
   }
 }

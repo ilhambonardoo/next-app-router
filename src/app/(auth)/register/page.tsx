@@ -14,11 +14,11 @@ const RegisterPage = () => {
     setError("");
 
     const password = e.target.password.value;
-    const confirmPassword = e.target["confirm-password"].value;
+    const confirmPassword = e.target.confirmPassword.value;
 
     if (confirmPassword !== password) {
       setError("Passwords do not match!");
-      setIsLoading(true);
+      setIsLoading(false);
       return;
     }
 
@@ -147,8 +147,8 @@ const RegisterPage = () => {
             </label>
             <div className="mt-2">
               <input
-                id="confirm-password"
-                name="confirm-password"
+                id="confirmPassword"
+                name="confirmPassword"
                 type="password"
                 required
                 autoComplete="new-password"
@@ -159,10 +159,11 @@ const RegisterPage = () => {
 
           <div>
             <button
+              disabled={isLoading}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none"
             >
-              Sign up
+              {isLoading ? "Loading..." : "Sign up account"}
             </button>
           </div>
         </form>
