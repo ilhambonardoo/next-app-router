@@ -3,10 +3,14 @@ import { FaLeftLong } from "react-icons/fa6";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 const LoginPage = () => {
   const { push } = useRouter();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const handleLogin = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const res = await signIn("credentials", {
         redirect: false,
@@ -15,9 +19,14 @@ const LoginPage = () => {
         callbackUrl: "/dashboard",
       });
       if (!res?.error) {
+        e.target.reset();
         push("/dashboard");
+        setIsLoading(false);
       } else {
-        console.log(res.error);
+        if (res.status == 401) {
+          setError("Email or password is incorrect");
+          setIsLoading(false);
+        }
       }
     } catch (error) {
       console.log("Login failed:", error);
@@ -35,10 +44,15 @@ const LoginPage = () => {
     // });
   };
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border ">
+    <div className="flex min-h-full items-center flex-col justify-center px-6 py-12 lg:px-8 ">
+      {error !== "" && (
+        <>
+          <div className="text-red-300 font-bold">{error}</div>
+        </>
+      )}
       <div className="border-white relative">
         <Link href={"/"}>
-          <button className="size-8  absolute left-126 bottom-8 cursor-pointer">
+          <button className="size-8  absolute right-126 bottom-8 cursor-pointer">
             <FaLeftLong size={28} className="text-white" />
           </button>
         </Link>
@@ -104,10 +118,11 @@ const LoginPage = () => {
 
           <div>
             <button
+              disabled={isLoading}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none"
             >
-              Sign in
+              {isLoading ? "Loading" : "Sign In"}
             </button>
           </div>
         </form>

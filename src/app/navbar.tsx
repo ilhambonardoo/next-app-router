@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { status }: { status: string } = useSession();
+  const { data: session, status }: { data: any; status: string } = useSession();
 
   return (
     <nav className="flex justify-between bg-gray-500 py-2 px-5">
@@ -54,14 +54,22 @@ const Navbar = () => {
         </div>
         <div>
           {status === "authenticated" ? (
-            <button
-              onClick={() => {
-                signOut();
-              }}
-              className="bg-white px-4 py-1 rounded-2xl cursor-pointer"
-            >
-              <span className="font-semibold">Logout</span>
-            </button>
+            <>
+              <div className="flex items-center justify-center gap-5">
+                <h1 className="font-extrabold text-zinc-300">Hi</h1>
+                <h4 className="font-bold text-zinc-300">
+                  {session?.user?.fullname}
+                </h4>
+                <button
+                  onClick={() => {
+                    signOut();
+                  }}
+                  className="bg-white px-4 py-1 rounded-2xl cursor-pointer"
+                >
+                  <span className="font-semibold">Logout</span>
+                </button>
+              </div>
+            </>
           ) : (
             <button
               onClick={() => {
